@@ -3,7 +3,7 @@ const express = require('express');
 const nodemailer = require('nodemailer');
 const path = require('path');
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Serve static files from the public folder
 app.use(express.static(path.join(__dirname, 'public')));
@@ -76,6 +76,12 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+// Export the app for Vercel
+module.exports = app;
+
+// Only start the server if this file is run directly (not imported as a module)
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+  });
+}
