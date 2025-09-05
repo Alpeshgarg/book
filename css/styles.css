@@ -411,7 +411,6 @@ body::after {
     display: flex;
     gap: 1.5rem;
     flex-wrap: wrap;
-    animation: fadeInUp 1s ease-out 1s both;
 }
 
 .btn {
