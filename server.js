@@ -5,9 +5,7 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Serve static files
-app.use(express.static(__dirname));
-app.use(express.static(path.join(__dirname, 'public')));
+// Note: Static files are handled by Vercel routing in vercel.json
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -70,9 +68,9 @@ app.post('/contact', async (req, res) => {
   }
 });
 
-// Serve homepage
+// Homepage route (static file served by Vercel)
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.send('<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0;url=/index.html"></head><body>Redirecting...</body></html>');
 });
 
 // ✅ Export for Vercel
