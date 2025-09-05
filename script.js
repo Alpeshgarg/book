@@ -59,7 +59,7 @@ document.getElementById('contactForm')?.addEventListener('submit', function(e) {
     submitBtn.style.opacity = '0.6';
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
-    fetch('/contact', {
+    fetch('/api/contact', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -114,7 +114,7 @@ document.getElementById('partnerForm')?.addEventListener('submit', function(e) {
     submitBtn.style.opacity = '0.6';
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
-    fetch('/partner', {
+    fetch('/api/partner', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

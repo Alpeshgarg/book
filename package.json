@@ -6,13 +6,19 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js",
+    "build": "echo 'No build required for static site'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["stationery", "delivery", "bookiya"],
+  "keywords": [
+    "stationery",
+    "delivery",
+    "bookiya"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "express": "^5.1.0",
-    "nodemailer": "^7.0.6"
+    "nodemailer": "^7.0.6",
+    "serverless-http": "^4.0.0"
   }
 }
