@@ -154,11 +154,11 @@ const observer = new IntersectionObserver((entries) => {
 }, observerOptions);
 
 // Observe elements for animation
-document.querySelectorAll('.feature-item, .highlight-card, .testimonial-card, .screenshot-mockup, .benefit-section').forEach(el => {
+document.querySelectorAll('.feature-item, .highlight-card, .testimonial-card, .screenshot-mockup, .benefit-section, .animate-on-scroll').forEach(el => {
     observer.observe(el);
 });
 
-// Navbar scroll effect
+// Navbar scroll effect with animation
 window.addEventListener('scroll', () => {
     const navbar = document.querySelector('.navbar');
     if (window.scrollY > 100) {
@@ -167,3 +167,177 @@ window.addEventListener('scroll', () => {
         navbar.classList.remove('scrolled');
     }
 });
+
+// Add parallax effect to floating elements
+window.addEventListener('scroll', () => {
+    const scrolled = window.pageYOffset;
+    const parallax = document.querySelectorAll('.floating-item');
+    const speed = 0.3;
+    
+    parallax.forEach(element => {
+        const yPos = -(scrolled * speed);
+        element.style.transform += ` translateY(${yPos}px)`;
+    });
+});
+
+// Add typing effect to hero title
+function typeWriter() {
+    const titleElement = document.querySelector('.hero-title');
+    const text = 'Bookiya';
+    let i = 0;
+    
+    function type() {
+        if (i < text.length) {
+            titleElement.textContent = text.substring(0, i + 1);
+            i++;
+            setTimeout(type, 150);
+        }
+    }
+    
+    // Start typing effect after page load
+    setTimeout(type, 1000);
+}
+
+// Counter animation for stats
+function animateCounters() {
+    const counters = document.querySelectorAll('.stat-number');
+    
+    counters.forEach(counter => {
+        const target = counter.innerText;
+        const count = parseInt(target.replace(/[^0-9]/g, ''));
+        let current = 0;
+        const increment = count / 100;
+        const suffix = target.replace(/[0-9]/g, '');
+        
+        const updateCounter = () => {
+            if (current < count) {
+                current += increment;
+                counter.innerText = Math.ceil(current) + suffix;
+                setTimeout(updateCounter, 20);
+            } else {
+                counter.innerText = target;
+            }
+        };
+        
+        updateCounter();
+    });
+}
+
+// Trigger counter animation when stats section is visible
+const statsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            animateCounters();
+            statsObserver.unobserve(entry.target);
+        }
+    });
+});
+
+const statsSection = document.querySelector('.stats-section');
+if (statsSection) {
+    statsObserver.observe(statsSection);
+}
+
+// Add hover effect to floating elements
+document.querySelectorAll('.floating-item').forEach(item => {
+    item.addEventListener('mouseenter', () => {
+        item.style.animationPlayState = 'paused';
+        item.style.transform = 'scale(1.5) rotate(15deg)';
+        item.style.zIndex = '10';
+    });
+    
+    item.addEventListener('mouseleave', () => {
+        item.style.animationPlayState = 'running';
+        item.style.transform = '';
+        item.style.zIndex = '1';
+    });
+});
+
+// Add ripple effect to buttons
+document.querySelectorAll('.btn').forEach(button => {
+    button.addEventListener('click', function(e) {
+        const ripple = document.createElement('span');
+        const rect = this.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = e.clientX - rect.left - size / 2;
+        const y = e.clientY - rect.top - size / 2;
+        
+        ripple.style.width = ripple.style.height = size + 'px';
+        ripple.style.left = x + 'px';
+        ripple.style.top = y + 'px';
+        ripple.classList.add('ripple');
+        
+        this.appendChild(ripple);
+        
+        setTimeout(() => {
+            ripple.remove();
+        }, 600);
+    });
+});
+
+// Initialize typing effect
+// typeWriter();
+
+// Countdown Timer
+function startCountdown() {
+    // Set target date (30 days from now)
+    const targetDate = new Date().getTime() + (30 * 24 * 60 * 60 * 1000);
+    
+    function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+        
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+        const daysEl = document.getElementById('days');
+        const hoursEl = document.getElementById('hours');
+        const minutesEl = document.getElementById('minutes');
+        const secondsEl = document.getElementById('seconds');
+        
+        if (daysEl) daysEl.innerText = days;
+        if (hoursEl) hoursEl.innerText = hours;
+        if (minutesEl) minutesEl.innerText = minutes;
+        if (secondsEl) secondsEl.innerText = seconds;
+        
+        if (distance < 0) {
+            clearInterval(countdownInterval);
+            if (daysEl) daysEl.innerText = '0';
+            if (hoursEl) hoursEl.innerText = '0';
+            if (minutesEl) minutesEl.innerText = '0';
+            if (secondsEl) secondsEl.innerText = '0';
+        }
+    }
+    
+    updateCountdown(); // Initial call
+    const countdownInterval = setInterval(updateCountdown, 1000);
+}
+
+// Waitlist functionality
+document.getElementById('joinWaitlistBtn')?.addEventListener('click', function() {
+    const email = document.getElementById('waitlistEmail').value;
+    if (email && email.includes('@')) {
+        // Simple email validation
+        const mailtoLink = `mailto:bookiyaapp@gmail.com?subject=Early Access Waitlist&body=Please add me to the early access waitlist:%0D%0AEmail: ${email}`;
+        window.open(mailtoLink);
+        
+        // Show success message
+        this.innerHTML = '<i class="fas fa-check"></i> Added to Waitlist!';
+        this.style.background = 'linear-gradient(45deg, #4CAF50, #66BB6A)';
+        
+        setTimeout(() => {
+            this.innerHTML = '<i class="fas fa-rocket"></i> Join Waitlist';
+            this.style.background = '';
+        }, 3000);
+        
+        document.getElementById('waitlistEmail').value = '';
+    } else {
+        alert('Please enter a valid email address.');
+    }
+});
+
+// Start countdown on page load
+startCountdown();
+
