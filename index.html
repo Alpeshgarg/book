@@ -1,7 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+        <style>
+            /* Make favicon logo appear circular if browser supports SVG mask */
+            link[rel="icon"] {
+                border-radius: 50%;
+                overflow: hidden;
+                mask-image: radial-gradient(circle, white 100%, transparent 100%);
+            }
+        </style>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="logo1.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bookiya - Bookiya</title>
     <link rel="stylesheet" href="styles.css">
@@ -155,7 +164,7 @@
                             <div class="feature-icon">⭐</div>
                             <div class="feature-content">
                                 <h4>Reviews & Ratings</h4>
-                                <p>Rate shops and products to help other users.</p>
+                                <p>Rate products to help other users.</p>
                             </div>
                         </div>
                     </div>
