@@ -199,6 +199,36 @@ min-height: 100vh;
     color: #2A5298;
 }
 
+/* Mobile Menu Toggle */
+.mobile-menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    padding: 5px;
+    z-index: 1001;
+}
+
+.mobile-menu-toggle span {
+    width: 25px;
+    height: 3px;
+    background-color: #333;
+    margin: 2px 0;
+    transition: 0.3s;
+    border-radius: 2px;
+}
+
+.mobile-menu-toggle.active span:nth-child(1) {
+    transform: rotate(-45deg) translate(-5px, 6px);
+}
+
+.mobile-menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.mobile-menu-toggle.active span:nth-child(3) {
+    transform: rotate(45deg) translate(-5px, -6px);
+}
+
 /* Background Animation */
 body::before {
     content: '';
@@ -2505,6 +2535,57 @@ transition: opacity 0.6s ease, transform 0.6s ease;
     box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
 }
 
+/* Mobile Browser Optimizations */
+@supports (-webkit-overflow-scrolling: touch) {
+    body {
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* Improved touch targets */
+.btn, .nav-links a, .close, .modal button {
+    min-height: 44px;
+    min-width: 44px;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+/* Prevent zoom on input focus (iOS Safari) */
+input, textarea, select {
+    font-size: 16px !important;
+    -webkit-appearance: none;
+    border-radius: 0;
+}
+
+/* Better mobile scrolling */
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+}
+
+/* Mobile-specific animations (reduced motion) */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Better mobile layout performance */
+.hero-visual, .phone-mockup {
+    will-change: transform;
+    transform: translateZ(0);
+}
+
+/* Mobile status bar styling */
+@media screen and (max-device-width: 480px) {
+    .navbar {
+        padding-top: env(safe-area-inset-top, 1rem);
+    }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .hero-container {
@@ -2611,8 +2692,38 @@ transition: opacity 0.6s ease, transform 0.6s ease;
         padding: 0.8rem 1.2rem;
     }
     
+    .mobile-menu-toggle {
+        display: flex;
+    }
+    
     .nav-links {
         display: none;
+        position: fixed;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(10px);
+        flex-direction: column;
+        padding: 2rem 0;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+    }
+    
+    .nav-links.active {
+        display: flex;
+    }
+    
+    .nav-links a {
+        padding: 1rem 2rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .nav-links a:hover {
+        background: rgba(42, 82, 152, 0.1);
+        padding-left: 2.5rem;
     }
     
     .floating-item {
