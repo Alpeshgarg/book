@@ -1,20 +1,79 @@
-const express = require('express');
-const nodemailer = require('nodemailer');
+// Basic Vercel serverless function
+module.exports = async (req, res) => {
+  // Enable CORS
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-const app = express();
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
 
-// Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// Simple test endpoint
-app.get('/api', (req, res) => {
-  res.json({ message: 'API is working!' });
-});
-
-// Partner registration
-app.post('/partner', async (req, res) => {
   try {
+    if (req.method === 'GET') {
+      // Simple API test endpoint
+      res.status(200).json({ 
+        message: 'Bookiya API is working!', 
+        timestamp: new Date().toISOString() 
+      });
+      return;
+    }
+
+    if (req.method === 'POST') {
+      const { url } = req;
+      
+      if (url === '/contact') {
+        await handleContact(req, res);
+        return;
+      }
+      
+      if (url === '/partner') {
+        await handlePartner(req, res);
+        return;
+      }
+    }
+
+    // Default response
+    res.status(404).json({ error: 'Not found' });
+  } catch (error) {
+    console.error('API Error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+async function handleContact(req, res) {
+  try {
+    const nodemailer = require('nodemailer');
+    const { name, email, phone, message } = req.body;
+
+    let transporter = nodemailer.createTransporter({
+      service: 'gmail',
+      auth: {
+        user: 'bookiyaapp@gmail.com',
+        pass: 'mouunxdxxyxsqifz'
+      }
+    });
+
+    let mailOptions = {
+      from: email,
+      to: 'bookiyaapp@gmail.com',
+      subject: `Contact Form: ${name}`,
+      text: `Name: ${name}\nEmail: ${email}\nPhone: ${phone}\nMessage: ${message}`
+    };
+
+    await transporter.sendMail(mailOptions);
+    res.status(200).json({ success: true, message: 'Message sent!' });
+  } catch (error) {
+    console.error('Contact error:', error);
+    res.status(500).json({ success: false, message: 'Error sending message.' });
+  }
+}
+
+async function handlePartner(req, res) {
+  try {
+    const nodemailer = require('nodemailer');
     const { shopName, ownerName, shopAddress, mapsLink, contactNumber, altContactNumber, email } = req.body;
     
     let transporter = nodemailer.createTransporter({
@@ -40,39 +99,9 @@ app.post('/partner', async (req, res) => {
     };
     
     await transporter.sendMail(mailOptions);
-    res.status(200).send('Registration sent!');
+    res.status(200).json({ success: true, message: 'Registration sent!' });
   } catch (error) {
-    console.error('Partner registration error:', error);
-    res.status(500).send('Error sending registration.');
+    console.error('Partner error:', error);
+    res.status(500).json({ success: false, message: 'Error sending registration.' });
   }
-});
-
-// Contact form
-app.post('/contact', async (req, res) => {
-  try {
-    const { name, email, phone, message } = req.body;
-
-    let transporter = nodemailer.createTransporter({
-      service: 'gmail',
-      auth: {
-        user: 'bookiyaapp@gmail.com',
-        pass: 'mouunxdxxyxsqifz'
-      }
-    });
-
-    let mailOptions = {
-      from: email,
-      to: 'bookiyaapp@gmail.com',
-      subject: `Contact Form: ${name}`,
-      text: `Name: ${name}\nEmail: ${email}\nPhone: ${phone}\nMessage: ${message}`
-    };
-
-    await transporter.sendMail(mailOptions);
-    res.status(200).send('Message sent!');
-  } catch (error) {
-    console.error('Contact form error:', error);
-    res.status(500).send('Error sending message.');
-  }
-});
-
-module.exports = app;
+}
