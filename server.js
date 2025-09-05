@@ -1,11 +1,13 @@
-// server.js
+// server.js - Local development server
 const express = require('express');
 const nodemailer = require('nodemailer');
 const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Note: Static files are handled by Vercel routing in vercel.json
+// Serve static files (CSS, JS, images, HTML)
+app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -68,17 +70,12 @@ app.post('/contact', async (req, res) => {
   }
 });
 
-// Homepage route (static file served by Vercel)
+// Serve homepage
 app.get('/', (req, res) => {
-  res.send('<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0;url=/index.html"></head><body>Redirecting...</body></html>');
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// ✅ Export for Vercel
-module.exports = app;
-
-// Local run
-if (require.main === module) {
-  app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-  });
-}
+// Start server
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});

@@ -1,8 +1,18 @@
 {
+  "name": "stationery-delivery-app",
+  "version": "1.0.0",
+  "description": "Bookiya - Stationery Delivery App Frontend",
+  "main": "server.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": ["stationery", "delivery", "bookiya"],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^5.1.0",
+    "nodemailer": "^7.0.6"
   }
 }
