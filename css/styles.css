@@ -2588,8 +2588,20 @@ body {
     }
 }
 
+/* Responsive text line breaks */
+.mobile-break {
+    display: none;
+}
+
+.tagline-mobile {
+    display: inline;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
+    .mobile-break {
+        display: inline;
+    }
     .hero-container {
         grid-template-columns: 1fr;
         text-align: center;
