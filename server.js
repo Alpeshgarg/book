@@ -5,10 +5,10 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Serve static files from the public folder
-app.use(express.static(path.join(__dirname, 'public')));
-// Also serve static files from the root for index.html, styles.css, script.js, etc.
+// Serve static files from the root directory (includes css, images, js, etc.)
 app.use(express.static(__dirname));
+// Also serve static files from the public folder if it exists
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
