@@ -198,6 +198,104 @@ function typeWriter() {
     setTimeout(type, 1000);
 }
 
+// Interactive Map Functionality
+let currentZoom = 13; // Default zoom level
+let mapVisible = false;
+
+document.getElementById('toggleMap')?.addEventListener('click', function() {
+    const mapContainer = document.getElementById('mapContainer');
+    const button = this;
+    const buttonText = button.querySelector('span');
+    const buttonIcon = button.querySelector('i');
+    
+    if (!mapVisible) {
+        // Show map
+        mapContainer.style.display = 'block';
+        mapContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        buttonText.textContent = 'Hide Map';
+        buttonIcon.classList.remove('fa-map');
+        buttonIcon.classList.add('fa-times');
+        button.classList.add('active');
+        mapVisible = true;
+        
+        // Add entrance animation
+        setTimeout(() => {
+            mapContainer.style.opacity = '1';
+            mapContainer.style.transform = 'translateY(0)';
+        }, 100);
+    } else {
+        // Hide map
+        mapContainer.style.display = 'none';
+        buttonText.textContent = 'Show Map';
+        buttonIcon.classList.remove('fa-times');
+        buttonIcon.classList.add('fa-map');
+        button.classList.remove('active');
+        mapVisible = false;
+    }
+});
+
+// Map zoom controls functionality
+document.getElementById('zoomIn')?.addEventListener('click', function() {
+    if (currentZoom < 18) {
+        currentZoom++;
+        updateMapZoom();
+        this.style.transform = 'scale(0.9)';
+        setTimeout(() => {
+            this.style.transform = 'scale(1)';
+        }, 150);
+    }
+});
+
+document.getElementById('zoomOut')?.addEventListener('click', function() {
+    if (currentZoom > 8) {
+        currentZoom--;
+        updateMapZoom();
+        this.style.transform = 'scale(0.9)';
+        setTimeout(() => {
+            this.style.transform = 'scale(1)';
+        }, 150);
+    }
+});
+
+// Function to update map zoom
+function updateMapZoom() {
+    const mapIframe = document.querySelector('.map-embed iframe');
+    if (mapIframe) {
+        const currentSrc = mapIframe.src;
+        const newSrc = currentSrc.replace(/!4f[0-9.]+/, `!4f${currentZoom}.1`);
+        
+        // Add loading effect
+        mapIframe.style.opacity = '0.7';
+        mapIframe.style.transition = 'opacity 0.3s ease';
+        
+        setTimeout(() => {
+            mapIframe.src = newSrc;
+            mapIframe.style.opacity = '1';
+        }, 300);
+    }
+}
+
+// Add map interaction feedback
+document.querySelector('.map-embed')?.addEventListener('mouseenter', function() {
+    this.style.transform = 'scale(1.02)';
+    this.style.transition = 'transform 0.3s ease';
+});
+
+document.querySelector('.map-embed')?.addEventListener('mouseleave', function() {
+    this.style.transform = 'scale(1)';
+});
+
+// Add loading animation for map
+document.addEventListener('DOMContentLoaded', function() {
+    const mapIframe = document.querySelector('.map-embed iframe');
+    if (mapIframe) {
+        mapIframe.addEventListener('load', function() {
+            this.style.filter = 'brightness(1) contrast(1.1)';
+            this.style.transition = 'filter 0.5s ease';
+        });
+    }
+});
+
 // Counter animation for stats
 function animateCounters() {
     const counters = document.querySelectorAll('.stat-number');
