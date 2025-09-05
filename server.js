@@ -1,18 +1,18 @@
-
+// server.js
 const express = require('express');
 const nodemailer = require('nodemailer');
 const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Serve static files from the root directory (includes css, images, js, etc.)
+// Serve static files
 app.use(express.static(__dirname));
-// Also serve static files from the public folder if it exists
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// Handle partner registration form
+
+// Partner registration
 app.post('/partner', async (req, res) => {
   const { shopName, ownerName, shopAddress, mapsLink, contactNumber, altContactNumber, email } = req.body;
   let transporter = nodemailer.createTransport({
@@ -43,15 +43,15 @@ app.post('/partner', async (req, res) => {
   }
 });
 
+// Contact form
 app.post('/contact', async (req, res) => {
   const { name, email, phone, message } = req.body;
 
-  // Configure your email transport (use your email and app password)
   let transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
       user: 'bookiyaapp@gmail.com',
-      pass: 'mouunxdxxyxsqifz' // Gmail app password
+      pass: 'mouunxdxxyxsqifz'
     }
   });
 
@@ -70,16 +70,15 @@ app.post('/contact', async (req, res) => {
   }
 });
 
-
-// Serve index.html for root route
+// Serve homepage
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Export the app for Vercel
+// ✅ Export for Vercel
 module.exports = app;
 
-// Only start the server if this file is run directly (not imported as a module)
+// Local run
 if (require.main === module) {
   app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
